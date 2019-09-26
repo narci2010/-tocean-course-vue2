@@ -1,11 +1,11 @@
 
 <template>
-  <smartlist :items="items">
-    <tr isOrdered=true>
-      <td>1</td>
-      <td>2</td>
-      <td>3</td>
-    </tr>
+  <smartlist :items="items"
+             :isOrdered="isOrdered">
+    <li v-for="todo in todos"
+        v-bind:key="todo">
+      {{ todo }}
+    </li>
   </smartlist>
 </template>
 <script>
@@ -13,22 +13,14 @@ import Vue from 'vue';
 
 const EmptyList = { /* ... */ };
 const TableList = { /* ... */
-  template: '#t',
-  directives:
-  {
-    name: 'items',
-    value: '2',
-    expression: '1 + 1',
-    arg: 'foo',
-    modifiers: {
-      bar: true,
-    },
-  },
-
-  attrs: {
-    id: 'h1',
-
-  },
+  template: `<ul>
+  <li
+    v-for="todo in filteredTodos"
+    v-bind:key="todo.id"
+  >
+    {{ todo.text }}
+  </li>
+</ul>`,
 };
 const OrderedList = { /* ... */ };
 const UnorderedList = { /* ... */ };
@@ -59,7 +51,9 @@ Vue.component('smartlist', {
     //     console.log(context.children);
     console.log(appropriateListComponent());
     return createElement(
-      'table',
+      {
+        template: '<ul><slot></slot></ul>',
+      },
       context.data,
       context.children,
     );
@@ -71,6 +65,8 @@ export default {
     return {
       tag: 'h1',
       items: [1, 2, 3],
+      todos: [1, 2, 3],
+      isOrdered: true,
     };
   },
 
